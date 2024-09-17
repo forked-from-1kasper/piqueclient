@@ -91,6 +91,16 @@ class FeatureConnection(BasicConnection):
             self.set_input_data(contained)
             self.sendPacket(contained)
 
+    def sendOrientationData(self, ox, oy, oz):
+        self.world_object.set_orientation(ox, oy, oz)
+
+        contained = loaders.OrientationData()
+        contained.x = ox
+        contained.y = oy
+        contained.z = oz
+
+        self.sendPacket(contained)
+
     def handlePacketMapStart(self, reader):
         contained = reader.readPacket(loaders.MapStart)
 
