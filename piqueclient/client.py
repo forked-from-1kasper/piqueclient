@@ -246,7 +246,7 @@ class FeatureConnection(BasicConnection):
         x2, y2, z2 = contained.x2, contained.y2, contained.z2
 
         for x, y, z in cube_line(x1, y1, z2, x2, y2, z2):
-            world.map.set_point(x, y, z, color)
+            self.world.map.set_point(x, y, z, color)
 
     def handlePacketChatMessage(self, reader):
         contained = reader.readPacket(loaders.ChatMessage)
