@@ -49,6 +49,32 @@ class FeatureConnection(BasicConnection):
     def on_player_join(self, player):
         pass
 
+    def sendSetTool(self, tool):
+        contained           = loaders.SetTool()
+        contained.player_id = self.player_id
+        contained.value     = tool
+
+        self.tool = tool
+        self.sendPacket(contained)
+
+    def sendSetColor(self, color):
+        contained           = loaders.SetColor()
+        contained.player_id = self.player_id
+        contained.value     = make_color(*color)
+
+        self.color = color
+        self.sendPacket(contained)
+
+    def sendBlockAction(self, value, x, y, z):
+        contained           = loaders.BlockAction()
+        contained.player_id = self.player_id
+        contained.value     = value
+        contained.x         = x
+        contained.y         = y
+        contained.z         = z
+
+        self.sendPacket(contained)
+
     def sendExistingPlayer(self):
         contained           = loaders.ExistingPlayer()
         contained.player_id = self.player_id
