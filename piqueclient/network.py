@@ -18,7 +18,7 @@ class ABCConnection:
         self.weapon = weapon
         self.tool   = WEAPON_TOOL
         self.color  = self.default_color
-        self.kills  = 0
+        self.score  = 0
 
     def set_weapon_input(self, o):
         if wo := self.world_object:

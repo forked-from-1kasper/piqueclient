@@ -49,6 +49,12 @@ class FeatureConnection(BasicConnection):
     def on_player_join(self, player):
         pass
 
+    def on_player_kill(self, player, killer_id, kill_type, respawn_time):
+        pass
+
+    def on_player_leave(self, player):
+        pass
+
     def sendSetTool(self, tool):
         contained           = loaders.SetTool()
         contained.player_id = self.player_id
@@ -163,7 +169,7 @@ class FeatureConnection(BasicConnection):
         player.team         = contained.team
         player.weapon       = contained.weapon
         player.tool         = contained.tool
-        player.kills        = contained.kills
+        player.score        = contained.kills
         player.color        = get_color(contained.color)
         player.name         = contained.name
 
@@ -192,8 +198,19 @@ class FeatureConnection(BasicConnection):
     def handlePacketKillAction(self, reader):
         contained = reader.readPacket(loaders.KillAction)
 
+        if contained.player_id != contained.killer_id:
+            if killer := self.players.get(contained.killer_id):
+                killer.score += 1
+
         if player := self.players.get(contained.player_id):
             player.world_object.dead = True
+            self.on_player_kill(player, contained.killer_id, contained.kill_type, contained.respawn_time)
+
+    def handlePacketIntelCapture(self, reader):
+        contained = reader.readPacket(loaders.IntelCapture)
+
+        if player := self.players.get(contained.player_id):
+            player.score += 10
 
     def handlePacketPlayerLeft(self, reader):
         contained = reader.readPacket(loaders.PlayerLeft)
@@ -201,6 +218,8 @@ class FeatureConnection(BasicConnection):
         if player := self.players.get(contained.player_id):
             self.world.delete_object(player.world_object)
             del self.players[contained.player_id]
+
+            self.on_player_leave(player)
 
     def handlePacketWorldUpdate(self, reader):
         nitems = reader.dataLeft() // 24
