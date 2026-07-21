@@ -1,5 +1,5 @@
 from time import monotonic, sleep
-import enet
+import pyspades.enet as enet
 
 from pyspades.constants import RIFLE_WEAPON, WEAPON_TOOL
 from pyspades.bytes import ByteWriter
@@ -59,7 +59,7 @@ class BasicConnection(ABCConnection):
 
     def loader_received(self, packet):
         reader = PacketReader(packet.data)
-        packet_id = reader.readByte(True)
+        packet_id = reader.readUInt8LE()
 
         if handler := getattr(self, packet_attribute[packet_id], None):
             handler(reader)

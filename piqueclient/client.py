@@ -225,12 +225,12 @@ class FeatureConnection(BasicConnection):
         nitems = reader.dataLeft() // 24
 
         for player_id in range(nitems):
-            px = reader.readFloat(False)
-            py = reader.readFloat(False)
-            pz = reader.readFloat(False)
-            ox = reader.readFloat(False)
-            oy = reader.readFloat(False)
-            oz = reader.readFloat(False)
+            px = reader.readFloat32LE()
+            py = reader.readFloat32LE()
+            pz = reader.readFloat32LE()
+            ox = reader.readFloat32LE()
+            oy = reader.readFloat32LE()
+            oz = reader.readFloat32LE()
 
             if player := self.players.get(player_id):
                 player.world_object.set_position(px, py, pz)
